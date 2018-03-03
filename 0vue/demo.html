@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>VUE demo</title>
+	<script src="vue.js"></script>
+	
+</head>
+<body>
+	<!-- Hello world -->
+	<div id="app">{{message}}</div>
+
+	<!-- 指令：bind -->
+	<div id="app-2">
+		<span v-bind:title="messaage">
+			鼠标悬停几秒钟查看此处动态绑定的提示信息！
+		</span>
+	</div>
+
+	<!-- 指令：if -->
+	<div id="app-3">
+		<p v-if="seen">现在你看到我了</p>
+	</div>
+
+	<!-- 指令：for -->
+	<div id="app-4">
+		<ol>
+			<li v-for="todo in todos">
+				{{ todo.text }}
+			</li>
+		</ol>
+	</div>
+
+	<!-- 绑定事件 -->
+	<div id="app-5">
+		<p>{{messaage}}</p>
+		<button v-on:click="reverseMessage">逆转消息</button>
+	</div>
+
+	<!-- v-model 指令 -->
+	<div id="app-6">
+		<p>{{messaage}}</p>
+		<input v-model="messaage">
+	</div>
+
+	<!-- 注册组件 -->
+	<div id="app-7">
+		<ol>
+			<todo-item
+				v-for="item in groceryList"
+				v-bind:todo="item"
+				v-bind:key="item.id">
+			</todo-item>
+		</ol>
+	</div>
+	<script src="demo.js"></script>
+</body>
+</html>
