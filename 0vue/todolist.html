@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vue--TodoList</title>
+	<script src="vue.js"></script>
+	<style>
+		body {
+			font-family: Helvetica, sans-serif;
+		}
+		#app {
+			width: 800px;
+			margin: 30px auto;
+		}
+		#app-input {
+			width: 750px;
+			height: 35px;
+			padding: 0 5px;
+		}
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+		li {
+			height: 30px;
+		}
+		.item-status {
+			display: inline;
+			background: #32e232;
+			color: white;
+			padding: 3px 5px;
+		    font-size: 12px;
+		    margin-left: 6px;
+		    border-radius: 9px;
+		}
+		.item-delete {
+			display: inline; 
+			text-decoration: underline;
+			background: red;
+			font-size: 12px;
+			color: white;
+			cursor: pointer;
+			padding: 3px 5px;
+		    margin-left: 6px;
+		    border-radius: 9px;
+		}
+		.item-label {
+			display: inline;
+		}
+		.line-through {
+			text-decoration: line-through;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<h1>Todos today</h1>
+		<input id="app-input" v-model="newItem" @keyup.enter="addNew" placeholder="what to do today?">
+		<ul>
+			<li v-for="item in items">
+				<h3 @mouseenter="itemEnter(item)" @mouseleave="itemLeave(item)">
+					<input type="checkbox" @click="itemCheck(item)" :checked="item.checked">
+					<p class="item-label" :class="{ 'line-through': item.checked }">
+						{{ item.label }}
+					</p>
+					<p class="item-status" v-if="item.checked">Done</p>
+					<p class="item-delete" v-if="item.showDelete" @click="deleteClick(item)">Delete</p>
+				</h3>
+			</li>
+		</ul>
+	</div>
+	<script>
+		// 本地存储
+		var Store = {
+			fetch () {
+				return JSON.parse(window.localStorage.getItem("todos-vuejs") || '[]');
+			},
+			save (items) {
+				window.localStorage.setItem("todos-vuejs", JSON.stringify(items));
+			}
+		};
+
+		// 声明VUE对象
+		new Vue({
+			el: "#app",
+			data: {
+				items: Store.fetch(),
+				newItem: ""
+			},
+			watch: {
+				items: {
+					handler(items){
+						Store.save(items);
+					},
+					deep: true
+				}
+			},
+			methods: {
+				addNew(){
+					this.items.push({
+						label: this.newItem,
+						checked: false,
+						showDelete: false
+					});
+					this.newItem = "";
+				},
+				itemCheck(item){
+					item.checked = !item.checked;
+				},
+				itemEnter(item){
+					item.showDelete = true;
+				},
+				itemLeave(item){
+					item.showDelete = false;
+				},
+				deleteClick(item){
+					for(var i = 0; i < this.items.length; i++){
+						if (this.items[i].label == item.label) {
+							this.items.splice(i, 1);
+						}
+					}
+				}
+			}
+		});
+	</script>
+</body>
+</html>
